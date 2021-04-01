@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.24/datatables.min.css" />
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <body>
@@ -26,9 +28,13 @@
     <div class="row mt-3">
       <div class="col-sm-12">
         <div class="card">
-          <div class="card-header">
+          <h3 class="card-header d-flex justify-content-between align-items-center">
             Film list from Sakila
-          </div>
+            <a class="btn btn-primary" href="add.html" role="button">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+              Add Film
+            </a>
+          </h3>
           <div class="card-body">
             <table class="table table-hover" id="film_table">
               <thead>
