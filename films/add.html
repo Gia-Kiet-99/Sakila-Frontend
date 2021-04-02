@@ -39,7 +39,10 @@
               </div>
               <div class="form-group">
                 <label for="txtLang">Language</label>
-                <input type="text" id="txtLang" class="form-control" placeholder="1" required>
+                <!-- <input type="text" id="txtLang" class="form-control" placeholder="1" required> -->
+                <select id="txtLang" class="custom-select">
+                  <option disabled selected>Choose language</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="txtYear">Release year</label>
@@ -65,6 +68,19 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
   <script>
+    $(document).ready(function () {
+      $.ajax({
+        url: 'http://localhost:3000/api/languages',
+        type: 'GET'
+      }).done(function (data) {
+        // console.log(data);
+        for (language of data) {
+          const option = `<option value="${language.language_id}">${language.name}</option>`;
+          $('#txtLang').append(option);
+        }
+      });
+    })
+
     $('#btnSave').on('click', function () {
       const dataToPost = {
         title: $('#txtTitle').val(),
@@ -83,15 +99,16 @@
       }).done(function (data) {
         // console.log(data);
         Swal.fire({
-          title: 'Success!',
-          text: 'Do you want to continue',
           icon: 'success',
-          confirmButtonText: 'Cool'
+          title: 'Success',
+          text: 'The film has been saved',
+          showConfirmButton: false,
+          timer: 2000
         })
       }).fail(function (error) {
         console.log(error);
         Swal.fire({
-          title: 'Error!',
+          title: 'Oops...',
           text: error.responseJSON.error_message,
           icon: 'error',
           confirmButtonText: 'Sad'

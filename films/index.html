@@ -14,8 +14,29 @@
 </head>
 
 <body>
-
   <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="#"><strong>Sakila</strong></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Film <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="../actors/index.html">Actor</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
 
     <div class="row mt-3">
       <div class="col-sm-12">
@@ -73,13 +94,14 @@
 
   <script>
     $('#btnLoadFilms').on('click', function () {
+      $('#film_table > tbody').html("");
       $.ajax({
         url: 'http://localhost:3000/api/films',
         type: 'GET'
       }).done(function (data) {
         // console.log(data)
         for (film of data) {
-          const tr = `<tr>
+          const tr = `<tr id="${film.film_id}">
                   <th scope="row">${film.film_id}</th>
                   <td>${film.title}</td>
                   <td>${film.release_year}</td>
@@ -114,8 +136,8 @@
     function confirmDelete(film_id) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
-          confirmButton: 'btn btn-success mr-3',
-          cancelButton: 'btn btn-danger'
+          confirmButton: 'btn btn-danger mr-3',
+          cancelButton: 'btn btn-light'
         },
         buttonsStyling: false
       })
@@ -139,6 +161,7 @@
         url: `http://localhost:3000/api/films/${film_id}`,
         type: 'DELETE'
       }).done(() => {
+        $(`#${film_id}`).remove();
         Swal.fire({
           icon: 'success',
           title: 'The film has been deleted',
@@ -148,7 +171,7 @@
       }).fail((error) => {
         console.log(error);
         Swal.fire({
-          title: 'Error!',
+          title: 'Oops...',
           text: error.statusText,
           icon: 'error',
           confirmButtonText: 'Sad'
