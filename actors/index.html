@@ -15,6 +15,7 @@
 
 <body>
   <div class="container">
+    <!-- navbar -->
     <div class="row">
       <div class="col-sm-12">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -37,18 +38,43 @@
         </nav>
       </div>
     </div>
-    <div class="row">
+    <!-- Button load -->
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <button type="button" id="btnLoadActors" class="btn btn-outline-danger btn-lg btn-block">
+          Load actors
+        </button>
+      </div>
+    </div>
+    <!-- Actor Table -->
+    <div class="row mt-3">
       <div class="col-sm-12">
         <div class="card">
-          <div class="card-header">
-            Header
-          </div>
+          <h3 class="card-header d-flex justify-content-between">
+            Actor list from Sakila
+            <a class="btn btn-primary" href="./add.html" role="button">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+              New Actor
+            </a>
+          </h3>
           <div class="card-body">
-            <h4 class="card-title">Title</h4>
-            <p class="card-text">Text</p>
+            <table class="table table-hover" id="actor_table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">First name</th>
+                  <th scope="col">Last name</th>
+                  <th scope="col">Last update</th>
+                  <th scope="col">Option</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- actor data -->
+              </tbody>
+            </table>
           </div>
           <div class="card-footer text-muted">
-            Footer
+            Actor table
           </div>
         </div>
       </div>
@@ -62,6 +88,95 @@
   <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.24/datatables.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="https://kit.fontawesome.com/5ab99f6a6e.js" crossorigin="anonymous"></script>
+
+  <script>
+    $('#btnLoadActors').on('click', function () {
+      $.ajax({
+        url: 'http://localhost:3000/api/actors',
+        type: 'GET'
+      }).done((data) => {
+        // console.log(data);
+        for (actor of data) {
+          const tr = `<tr id="${actor.actor_id}">
+                  <td scope="row">${actor.actor_id}</td>
+                  <td scope="row">${actor.first_name}</td>
+                  <td scope="row">${actor.last_name}</td>
+                  <td scope="row">${actor.last_update}</td>
+                  <td scope="row">
+                    <button class="btn px-1 py-0" onclick="goToUpdatePage(${actor.actor_id})">
+                      <i class="far fa-edit fa-sm" style="color: #007bff;"></i>
+                      </button>
+                    <button class="btn px-1 py-0" onclick="confirmDelete(${actor.actor_id})">
+                      <i class="far fa-trash-alt fa-sm"></i>
+                      </button>
+                  </td>
+                </tr>`;
+          $('#actor_table tbody').append(tr);
+        }
+        $('#actor_table').DataTable();
+      })
+    })
+
+    function goToUpdatePage(actor_id) {
+      if (typeof (sessionStorage) !== 'undefined') {
+        sessionStorage.actor_id = actor_id;
+        window.location = 'update.html';
+      } else {
+        Swal.fire({
+          title: 'Oops...',
+          text: 'Sorry, your browser does not support web storage...',
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      }
+    }
+
+    function confirmDelete(actor_id) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-danger mr-3',
+          cancelButton: 'btn btn-light'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteActor(actor_id);
+        }
+      })
+    }
+
+    function deleteActor(actor_id) {
+      $.ajax({
+        url: `http://localhost:3000/api/actors/${actor_id}`,
+        type: 'DELETE'
+      }).done(() => {
+        $(`#${actor_id}`).remove();
+        Swal.fire({
+          icon: 'success',
+          title: 'The actor has been deleted',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }).fail((error) => {
+        console.log(error);
+        Swal.fire({
+          title: 'Oops...',
+          text: error.statusText,
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    }
+  </script>
 
 </body>
 

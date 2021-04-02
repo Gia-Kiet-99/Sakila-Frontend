@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add actor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.24/datatables.min.css" />
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+    <!-- navbar -->
+    <div class="row">
+      <div class="col-sm-12">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="#"><strong>Sakila</strong></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="../films/index.html">Film <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Actor</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Actors</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add actor</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="fas fa-user-plus"></i>
+            New actor info
+          </h3>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <label for="txtFirstName">First name</label>
+                <input type="text" id="txtFirstName" class="form-control" placeholder="John" aria-describedby="helpId"
+                  autofocus>
+              </div>
+              <div class="form-group">
+                <label for="txtLastName">Last name</label>
+                <input type="text" id="txtLastName" class="form-control" placeholder="Wick" aria-describedby="helpId"
+                  autofocus>
+              </div>
+              <button id="btnSave" class="btn btn-outline-success" type="button">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Save
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.24/datatables.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://kit.fontawesome.com/5ab99f6a6e.js" crossorigin="anonymous"></script>
+
+  <script>
+    $('#btnSave').on('click', function () {
+      const dataToPost = {
+        first_name: $('#txtFirstName').val() || 'John',
+        last_name: $('#txtLastName').val() || 'Wick'
+      };
+
+      const jsonToPost = JSON.stringify(dataToPost);
+
+      $.ajax({
+        url: 'http://localhost:3000/api/actors',
+        type: 'POST',
+        data: jsonToPost,
+        dataType: 'json',
+        contentType: 'application/json'
+      }).done(function (data) {
+        // console.log(data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'The actor has been saved',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }).fail(function (error) {
+        console.log(error);
+        Swal.fire({
+          title: 'Oops...',
+          text: error.responseJSON.error_message,
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    })
+  </script>
+
+</body>
+
+</html>
