@@ -89,9 +89,10 @@
           confirmButtonText: 'Cool'
         })
       }).fail(function (error) {
+        console.log(error);
         Swal.fire({
           title: 'Error!',
-          text: error.responseJSON.message_error,
+          text: error.responseJSON.error_message,
           icon: 'error',
           confirmButtonText: 'Sad'
         })

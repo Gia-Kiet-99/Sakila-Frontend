@@ -73,24 +73,26 @@
 
     $(document).ready(function () {
       // console.log(current_film_id);
-      $.ajax({
-        url: `http://localhost:3000/api/films/${current_film_id}`,
-        type: 'GET',
-      }).done(function (data) {
-        // console.log(data);
-        $('#txtId').val(data.film_id);
-        $('#txtTitle').val(data.title);
-        $('#txtLang').val(data.language_id);
-        $('#txtYear').val(data.release_year);
-      }).fail(function (error) {
-        Swal.fire({
-          title: 'Error!',
-          text: error.responseJSON.message_error,
-          icon: 'error',
-          confirmButtonText: 'Sad'
+      if (current_film_id) {
+        $.ajax({
+          url: `http://localhost:3000/api/films/${current_film_id}`,
+          type: 'GET',
+        }).done(function (data) {
+          // console.log(data);
+          $('#txtId').val(data.film_id);
+          $('#txtTitle').val(data.title);
+          $('#txtLang').val(data.language_id);
+          $('#txtYear').val(data.release_year);
+        }).fail(function (error) {
+          Swal.fire({
+            title: 'Error!',
+            text: error.responseJSON.message_error,
+            icon: 'error',
+            confirmButtonText: 'Sad'
+          })
         })
-      })
-      $("#txtId").prop("disabled", true);
+        $("#txtId").prop("disabled", true);
+      }
     })
 
     $('#btnSave').on('click', function () {
